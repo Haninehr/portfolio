@@ -245,7 +245,8 @@ body.light-mode .hero::after {
 .profile-pic-wrapper {
     position: relative;
     display: inline-block;
-    margin-bottom: 1.5rem;
+    margin-top: 0.45rem;
+    margin-bottom: 1.05rem;
 }
 
 .profile-pic {
