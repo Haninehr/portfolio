@@ -2,7 +2,7 @@
 const typingPhrases = [
     'Master 2 Computer Science • University of Algiers',
     'Full-Stack Developer',
-    'Final Year Project, Beez Mobile App for Beehive Management',
+    'Final Year Project, Beez AI for Beehive Management',
 ];
 let phraseIndex = 0;
 let charIndex = 0;
