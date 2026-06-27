@@ -1037,7 +1037,7 @@ body.light-mode .modal-tech span {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 1.2rem;
+    gap: 1.1rem;
     padding: 1.6rem;
 }
 
@@ -1052,7 +1052,7 @@ body.light-mode .qr-hint {
 }
 
 .qr-image {
-    max-width: 230px;
+    max-width: 210px;
     width: 100%;
     height: auto;
     border-radius: 12px;
@@ -1527,7 +1527,7 @@ body.light-mode .signature-black { display: block; }
         .signature {
         width: 100px;
         left: calc(50% - 50px);
-        top: 10px;
+        top: 7px;
         z-index: 100000;
         position: fixed;
     }
