@@ -239,11 +239,13 @@ function animateCounter(el, target) {
 // ==================== BACK TO TOP & SHARE BUTTON ====================
 const backToTop = document.getElementById('back-to-top');
 const shareBtn = document.getElementById('share-btn');
+const cvViewBtn = document.getElementById("view-cv-btn")
 
 window.addEventListener('scroll', () => {
     const scrolled = window.scrollY > 500;
     backToTop.style.display = scrolled ? 'flex' : 'none';
     if (shareBtn) shareBtn.classList.toggle('shifted', scrolled);
+    if (cvViewBtn) cvViewBtn.classList.toggle('shifted', scrolled);
 });
 
 backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
@@ -386,6 +388,50 @@ if (downloadQrBtn) {
         showToast('✅ QR code downloaded!', 'success');
     });
 }
+
+
+// ==================== CV VIEWER MODAL ====================
+const cvModal = document.getElementById('cv-modal');
+const cvModalClose = document.getElementById('cv-modal-close');
+const viewCvBtn = document.getElementById('view-cv-btn');
+
+function openCvModal() {
+    if (cvModal) {
+        cvModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeCvModal() {
+    if (cvModal) {
+        cvModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+if (viewCvBtn) {
+    viewCvBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openCvModal();
+    });
+}
+
+if (cvModalClose) {
+    cvModalClose.addEventListener('click', closeCvModal);
+}
+
+if (cvModal) {
+    cvModal.addEventListener('click', (e) => {
+        if (e.target === cvModal) closeCvModal();
+    });
+}
+
+// Close CV modal on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && cvModal && cvModal.style.display === 'flex') {
+        closeCvModal();
+    }
+});
 
 // ==================== PROTECTION ====================
 document.addEventListener('contextmenu', (event) => event.preventDefault());

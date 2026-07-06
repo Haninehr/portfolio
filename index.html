@@ -31,7 +31,7 @@
                         style="--i:4">a</span><span style="--i:5">h</span></span>
             </a>
             <ul class="nav-links" id="nav-links">
-                <li><a href="#home">Home</a></li>
+                <li><a href="#home" class="active">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#education">Education</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -73,7 +73,7 @@
                         class="fab fa-linkedin"></i></a>
                 <a href="mailto:Rouibah.Hanine@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
                 <a href="https://x.com/Hanine_Rouibah" target="_blank" aria-label="Twitter"><i
-                        class="fab fa-twitter"></i></a>
+                        class="fab fa-x-twitter"></i></a>
                 <a href="https://bsky.app/profile/hrouibah.bsky.social" target="_blank" aria-label="Bluesky"><i
                         class="fa-brands fa-bluesky"></i></a>
             </div>
@@ -368,7 +368,7 @@
                         <span class="tech-tag">Node.js</span>
                         <span class="tech-tag">Firebase</span>
                         <span class="tech-tag">AI</span>
-                        
+
                     </div>
                 </div>
             </div>
@@ -405,6 +405,24 @@
                     <div class="project-tech">
                         <span class="tech-tag">C++</span>
                         <span class="tech-tag">OpenGL</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 4: Smart Food Waste Reduction Platform -->
+            <div class="project-card fade-in fade-in-delay-3" data-title="Smart Food Waste Reduction Platform"
+                data-description="Web platform to reduce household food waste through intelligent inventory management."
+                data-full-desc="My Bachelor's final year project: a web platform designed to minimize household food waste. It features intelligent food inventory tracking, stock management, automatic shopping list generation, and a personalized recipe recommendation engine to encourage sustainable consumption. Built with PHP and MySQL for robust data handling, and jQuery for a dynamic, intuitive user interface."
+                data-tech="PHP,MySQL,jQuery,HTML5,CSS3" data-demo="#" data-github="https://github.com/Haninehr/">
+                <div class="project-img"><i class="fas fa-utensils"></i></div>
+                <div class="project-content">
+                    <h3>Smart Food Waste Reduction Platform</h3>
+                    <p>Bachelor's graduation project featuring intelligent stock management and dynamic recipe planning
+                        to minimize household waste.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">MySQL</span>
+                        <span class="tech-tag">jQuery</span>
                     </div>
                 </div>
             </div>
@@ -455,6 +473,24 @@
         </div>
     </div>
 
+    <!-- CV Viewer Modal -->
+    <div id="cv-modal" class="modal">
+        <div class="modal-content cv-modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-file-pdf"></i> My CV</h2>
+                <span class="modal-close" id="cv-modal-close">&times;</span>
+            </div>
+            <div class="modal-body cv-modal-body">
+                <iframe src="./assets/cv.pdf" id="cv-iframe" title="CV Viewer"></iframe>
+            </div>
+            <div class="cv-modal-footer">
+                <a href="./assets/cv.pdf" class="btn btn-primary" download>
+                    <i class="fas fa-download"></i> Download PDF
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Contact -->
     <section id="contact" class="section">
         <h2 class="fade-in">Get In Touch</h2>
@@ -489,7 +525,12 @@
         </div>
     </footer>
 
-    <!-- Floating Share Button -->
+    <!-- Floating Buttons -->
+
+    <button class="floating-btn cv-btn" id="view-cv-btn" aria-label="View CV">
+        <i class="fas fa-eye"></i>
+    </button>
+
     <button class="share-btn" id="share-btn" aria-label="Share portfolio">
         <i class="fas fa-share-alt"></i>
     </button>

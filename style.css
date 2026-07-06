@@ -1084,6 +1084,65 @@ body.light-mode .qr-url {
     border-color: rgba(59, 130, 246, 0.1);
 }
 
+
+/* ==================== CV VIEWER MODAL ==================== */
+.cv-modal-content {
+    max-width: 900px;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    max-height: 92vh;
+}
+
+.cv-modal-body {
+    padding: 0;
+    flex: 1;
+    min-height: 450px;
+    overflow: hidden;
+}
+
+.cv-modal-body iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    border: none;
+    border-radius: 0 0 12px 12px;
+    background: #fff;
+}
+
+.cv-modal-footer {
+    padding: 1rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+body.light-mode .cv-modal-footer {
+    border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 768px) {
+    .cv-modal-body {
+        min-height: 60vh;
+    }
+    .cv-modal-body iframe {
+        min-height: 60vh;
+    }
+    .cv-modal-footer {
+        padding: 1rem;
+    }
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero-buttons .btn {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+    }
+}
+
 /* ==================== FLOATING SHARE BUTTON ==================== */
 .share-btn {
     position: fixed;
@@ -1276,6 +1335,94 @@ body.light-mode .last-updated {
 .back-to-top:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
+}
+
+/* ==================== FLOATING CV BUTTON ==================== */
+.floating-btn {
+    position: fixed;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 998;
+    transition: all 0.3s;
+    border: none;
+    color: white;
+}
+
+.cv-btn {
+    bottom: 85px;
+    right: 25px;
+    background: #ef4444;
+    box-shadow: 0 5px 20px rgba(239, 68, 68, 0.35);
+}
+
+.cv-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5);
+}
+
+.cv-btn i {
+    transition: transform 0.3s ease;
+}
+
+.cv-btn:hover i {
+    transform: scale(1.1);
+}
+
+/* Adjust positions when back-to-top is visible */
+.back-to-top[style*="flex"] ~ .cv-btn,
+.back-to-top[style*="flex"] + .share-btn ~ .cv-btn,
+.cv-btn.shifted {
+    bottom: 145px;
+}
+
+/* Share button also needs shifted class support */
+.share-btn.shifted {
+    bottom: 85px;
+}
+
+/* Ensure proper stacking when multiple buttons are shifted */
+.back-to-top[style*="flex"] ~ .share-btn,
+.share-btn.shifted {
+    bottom: 85px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .floating-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+    }
+
+    .cv-btn {
+        bottom: 85px;
+        right: 20px;
+    }
+
+    .cv-btn.shifted,
+    .back-to-top[style*="flex"] ~ .cv-btn {
+        bottom: 132px;
+    }
+
+    .share-btn {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .share-btn.shifted {
+        bottom: 76px;
+    }
+
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+    }
 }
 
 /* ==================== TOAST ==================== */
