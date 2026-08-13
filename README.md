@@ -103,4 +103,4 @@ This project is open source and available under the [MIT License](LICENSE).
 > 💡 **Tip**: Star ⭐ this repo if you found it helpful!  
 > 🐛 Found an issue? [Open an issue](https://github.com/Haninehr/ROUIBAH.Hanine.github.io/issues) or submit a PR.
 
-###### Last Updated : 2026-04-26
+###### Last Updated : 2026-08-13
