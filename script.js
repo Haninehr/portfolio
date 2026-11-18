@@ -1,8 +1,8 @@
 // ==================== TYPING ANIMATION ====================
 const typingPhrases = [
-    'Master 2 Computer Science • University of Algiers',
-    'Full-Stack Developer',
-    'Final Year Project, Beez AI for Beehive Management',
+    "Master's graduate in Computer Science • University of Algiers",
+    "Exploring digital assets, blockchain, and financial tech",
+    "Startup Project, Beez AI for Beehive Management",
 ];
 let phraseIndex = 0;
 let charIndex = 0;
@@ -268,78 +268,7 @@ themeToggle.addEventListener('click', () => {
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
 });
 
-// ==================== PROJECT MODAL ====================
-const modal = document.getElementById('project-modal');
-const modalTitle = document.getElementById('modal-title');
-const modalFullDesc = document.getElementById('modal-full-desc');
-const modalImg = document.getElementById('modal-img');
-const modalTechContainer = document.getElementById('modal-tech');
-const modalDemoLink = document.getElementById('modal-demo-link');
-const modalGithubLink = document.getElementById('modal-github-link');
-const modalClose = document.getElementById('modal-close');
 
-function closeModal() {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-modalClose.addEventListener('click', closeModal);
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-});
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-});
-
-document.querySelectorAll('.project-card').forEach(card => {
-    card.addEventListener('click', () => {
-        const title = card.getAttribute('data-title');
-        const description = card.getAttribute('data-description');
-        const fullDesc = card.getAttribute('data-full-desc');
-        const techString = card.getAttribute('data-tech');
-        const demo = card.getAttribute('data-demo');
-        const github = card.getAttribute('data-github');
-
-        modalTitle.textContent = title;
-        modalFullDesc.innerHTML = `<strong>Short description:</strong> ${description}<br><br>${fullDesc}`;
-        modalImg.textContent = 'Project Screenshot (larger view)';
-
-        modalTechContainer.innerHTML = '';
-        if (techString) {
-            techString.split(',').forEach(tech => {
-                const span = document.createElement('span');
-                span.textContent = tech.trim();
-                modalTechContainer.appendChild(span);
-            });
-        }
-
-        modalDemoLink.href = demo || '#';
-        modalGithubLink.href = github || '#';
-
-        if (isPlaceholderLink(demo)) {
-            modalDemoLink.style.pointerEvents = 'none';
-            modalDemoLink.style.opacity = '0.5';
-            modalDemoLink.title = 'Demo coming soon';
-        } else {
-            modalDemoLink.style.pointerEvents = 'auto';
-            modalDemoLink.style.opacity = '1';
-            modalDemoLink.title = '';
-        }
-
-        if (isPlaceholderLink(github) || github?.includes('yourusername')) {
-            modalGithubLink.style.pointerEvents = 'none';
-            modalGithubLink.style.opacity = '0.5';
-            modalGithubLink.title = 'GitHub repo coming soon';
-        } else {
-            modalGithubLink.style.pointerEvents = 'auto';
-            modalGithubLink.style.opacity = '1';
-            modalGithubLink.title = '';
-        }
-
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
-});
 
 // ==================== QR CODE SHARE MODAL ====================
 const qrModal = document.getElementById('qr-modal');
@@ -434,12 +363,12 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ==================== PROTECTION ====================
-document.addEventListener('contextmenu', (event) => event.preventDefault());
+/*document.addEventListener('contextmenu', (event) => event.preventDefault());
 document.addEventListener('keydown', (event) => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'u') {
         event.preventDefault();
     }
-});
+});*/
 
 // ==================== LAST UPDATED DATE ====================
 document.addEventListener('DOMContentLoaded', () => {
