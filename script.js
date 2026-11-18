@@ -1,8 +1,8 @@
 // ==================== TYPING ANIMATION ====================
 const typingPhrases = [
-    "Master's graduate in Computer Science • University of Algiers",
-    "Exploring digital assets, blockchain, and financial tech",
-    'Startup Project, Beez AI for Beehive Management',
+    'Master 2 Computer Science • University of Algiers',
+    'Full-Stack Developer',
+    'Final Year Project, Beez AI for Beehive Management',
 ];
 let phraseIndex = 0;
 let charIndex = 0;
@@ -434,12 +434,12 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ==================== PROTECTION ====================
-/*document.addEventListener('contextmenu', (event) => event.preventDefault());
+document.addEventListener('contextmenu', (event) => event.preventDefault());
 document.addEventListener('keydown', (event) => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'u') {
         event.preventDefault();
     }
-});*/
+});
 
 // ==================== LAST UPDATED DATE ====================
 document.addEventListener('DOMContentLoaded', () => {
