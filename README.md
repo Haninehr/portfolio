@@ -196,7 +196,7 @@ This project is available under the [MIT License](LICENSE).
 
 <div align="center">
 
-** Rouibah Hanine **
+ **Rouibah Hanine** 
 
 
 </div>
