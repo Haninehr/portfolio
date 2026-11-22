@@ -579,7 +579,8 @@ function showTyping() {
     typing.className = 'chat-message bot';
     typing.id = 'typing-indicator';
     typing.innerHTML = `
-        <div class="message-avatar"><i class="fas fa-robot"></i></div>
+        <div class="message-avatar"><div class="message-avatar"><span class="chat-btn-icon" style="    font-weight: 800;
+    letter-spacing: 1.2px;">AI</span></div></div>
         <div class="message-bubble">
             <div class="typing-indicator">
                 <span></span><span></span><span></span>
