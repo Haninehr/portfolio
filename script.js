@@ -239,13 +239,15 @@ function animateCounter(el, target) {
 // ==================== BACK TO TOP & SHARE BUTTON ====================
 const backToTop = document.getElementById('back-to-top');
 const shareBtn = document.getElementById('share-btn');
-const cvViewBtn = document.getElementById("view-cv-btn")
+const cvViewBtn = document.getElementById("view-cv-btn");
+const chatBtn = document.getElementById('chat-btn');
 
 window.addEventListener('scroll', () => {
     const scrolled = window.scrollY > 500;
     backToTop.style.display = scrolled ? 'flex' : 'none';
     if (shareBtn) shareBtn.classList.toggle('shifted', scrolled);
     if (cvViewBtn) cvViewBtn.classList.toggle('shifted', scrolled);
+    if (chatBtn) chatBtn.classList.toggle('shifted', scrolled);
 });
 
 backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
@@ -383,3 +385,295 @@ document.addEventListener('DOMContentLoaded', () => {
         day: 'numeric'
     });
 });
+// ==================== CHAT WIDGET ====================
+const chatWidget = document.getElementById('chat-widget');
+const chatClose = document.getElementById('chat-close');
+const chatInput = document.getElementById('chat-input');
+const chatSend = document.getElementById('chat-send');
+const chatMessages = document.getElementById('chat-messages');
+const chatSuggestions = document.getElementById('chat-suggestions');
+
+function openChat() {
+    if (!chatWidget) return;
+    chatWidget.classList.add('open');
+    chatWidget.setAttribute('aria-hidden', 'false');
+    // Hide floating buttons while chat is open for cleaner look
+    if (chatBtn) chatBtn.style.display = 'none';
+    if (cvViewBtn) cvViewBtn.style.display = 'none';
+    if (shareBtn) shareBtn.style.display = 'none';
+    if (backToTop) backToTop.style.display = 'none';
+    setTimeout(() => chatInput && chatInput.focus(), 280);
+}
+
+function closeChat() {
+    if (!chatWidget) return;
+    chatWidget.classList.remove('open');
+    chatWidget.setAttribute('aria-hidden', 'true');
+    if (chatBtn) chatBtn.style.display = 'flex';
+    if (cvViewBtn) cvViewBtn.style.display = 'flex';
+    if (shareBtn) shareBtn.style.display = 'flex';
+    // Restore back-to-top visibility based on scroll
+    if (backToTop) {
+        backToTop.style.display = window.scrollY > 500 ? 'flex' : 'none';
+    }
+}
+
+if (chatBtn) {
+    chatBtn.addEventListener('click', openChat);
+}
+
+if (chatClose) {
+    chatClose.addEventListener('click', closeChat);
+}
+
+// Close on Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && chatWidget && chatWidget.classList.contains('open')) {
+        closeChat();
+    }
+});
+
+// Enable/disable send button
+if (chatInput && chatSend) {
+    chatInput.addEventListener('input', () => {
+        chatSend.disabled = chatInput.value.trim().length === 0;
+    });
+
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && !chatSend.disabled) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    });
+}
+
+if (chatSend) {
+    chatSend.addEventListener('click', handleSendMessage);
+}
+
+// Suggestion chips
+if (chatSuggestions) {
+    chatSuggestions.addEventListener('click', (e) => {
+        const chip = e.target.closest('.suggestion-chip');
+        if (!chip) return;
+        const question = chip.dataset.question || chip.textContent;
+        chatInput.value = question;
+        chatSend.disabled = false;
+        handleSendMessage();
+    });
+}
+
+function getCurrentTime() {
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+// ---------- Safe Markdown renderer (no external libs) ----------
+// Everything is HTML-escaped FIRST, then a small whitelist of Markdown is turned
+// into tags. Links are limited to http(s)/mailto, so model output can never inject
+// scripts, images or attributes.
+function escapeHtml(str) {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function renderInline(s) {
+    const codes = [];
+    s = s.replace(/`([^`]+)`/g, (m, c) => {
+        codes.push(c);
+        return `\u0000${codes.length - 1}\u0000`;
+    });
+    // [text](https://...) and [text](mailto:...)
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)/g,
+        (m, t, u) => `<a href="${u}" target="_blank" rel="noopener noreferrer">${t}</a>`);
+    // bare URLs
+    s = s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+[^\s<).,;!?])/g,
+        (m, p, u) => `${p}<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`);
+    // bare emails
+    s = s.replace(/(^|[\s(])([\w.+-]+@[\w-]+\.[\w.-]*\w)/g,
+        (m, p, e) => `${p}<a href="mailto:${e}">${e}</a>`);
+    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*\w])\*([^*\s][^*]*?)\*(?!\w)/g, '$1<em>$2</em>');
+    s = s.replace(/\u0000(\d+)\u0000/g, (m, i) => `<code>${codes[i]}</code>`);
+    return s;
+}
+
+function renderMarkdown(text) {
+    text = escapeHtml(String(text).replace(/\u0000/g, '').replace(/\r\n/g, '\n'));
+    const html = [];
+
+    // split out fenced code blocks
+    const parts = text.split(/```[^\n]*\n?/);
+    parts.forEach((part, idx) => {
+        if (idx % 2 === 1) {
+            html.push(`<pre><code>${part.replace(/\n$/, '')}</code></pre>`);
+            return;
+        }
+        let list = null; // 'ul' | 'ol'
+        let para = [];
+        const flushPara = () => {
+            if (para.length) { html.push(`<p>${renderInline(para.join('<br>'))}</p>`); para = []; }
+        };
+        const closeList = () => { if (list) { html.push(`</${list}>`); list = null; } };
+
+        part.split('\n').forEach((line) => {
+            const trimmed = line.trim();
+            let m;
+            if (!trimmed) { flushPara(); closeList(); return; }
+            if ((m = trimmed.match(/^(#{1,4})\s+(.+)$/))) {
+                flushPara(); closeList();
+                const lvl = Math.min(m[1].length + 2, 6); // h3..h6 inside a small bubble
+                html.push(`<h${lvl}>${renderInline(m[2])}</h${lvl}>`);
+            } else if ((m = trimmed.match(/^[-*•]\s+(.+)$/))) {
+                flushPara();
+                if (list !== 'ul') { closeList(); html.push('<ul>'); list = 'ul'; }
+                html.push(`<li>${renderInline(m[1])}</li>`);
+            } else if ((m = trimmed.match(/^\d+[.)]\s+(.+)$/))) {
+                flushPara();
+                if (list !== 'ol') { closeList(); html.push('<ol>'); list = 'ol'; }
+                html.push(`<li>${renderInline(m[1])}</li>`);
+            } else if ((m = trimmed.match(/^&gt;\s?(.+)$/))) {
+                flushPara(); closeList();
+                html.push(`<blockquote>${renderInline(m[1])}</blockquote>`);
+            } else {
+                closeList();
+                para.push(trimmed);
+            }
+        });
+        flushPara(); closeList();
+    });
+    return html.join('');
+}
+
+function appendMessage(role, text) {
+    const msg = document.createElement('div');
+    msg.className = `chat-message ${role}`;
+
+    const avatarIcon = role === 'bot' ? 'fa-robot' : 'fa-user';
+    msg.innerHTML = `
+        <div class="message-avatar"><i class="fas ${avatarIcon}"></i></div>
+        <div class="message-bubble">
+            <div class="message-content"></div>
+            <span class="message-time">${getCurrentTime()}</span>
+        </div>
+    `;
+    const content = msg.querySelector('.message-content');
+    if (role === 'bot') {
+        content.classList.add('markdown');
+        content.innerHTML = renderMarkdown(text);   // escaped + whitelisted
+    } else {
+        const p = document.createElement('p');
+        p.textContent = text;                        // user text is never parsed as HTML
+        content.appendChild(p);
+    }
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return msg;
+}
+
+function showTyping() {
+    const typing = document.createElement('div');
+    typing.className = 'chat-message bot';
+    typing.id = 'typing-indicator';
+    typing.innerHTML = `
+        <div class="message-avatar"><i class="fas fa-robot"></i></div>
+        <div class="message-bubble">
+            <div class="typing-indicator">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    `;
+    chatMessages.appendChild(typing);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTyping() {
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
+}
+
+// ==================== REAL AI BACKEND ====================
+// 👉 Replace with your Render service URL after deploying the backend.
+const CHAT_API_URL = 'https://hanine-portfolio-gateway.onrender.com';
+
+const MAX_HISTORY = 6;       // messages sent back to the server for context
+let chatHistory = [];        // [{ role: 'user' | 'assistant', content }]
+let isWaitingForReply = false;
+let backendWarmed = false;
+
+// Render's free tier sleeps after inactivity; ping /health when the chat opens
+// so the server is awake by the time the visitor sends the first question.
+function warmUpBackend() {
+    if (backendWarmed || CHAT_API_URL.includes('YOUR-SERVICE-NAME')) return;
+    backendWarmed = true;
+    fetch(`${CHAT_API_URL}/health`).catch(() => { backendWarmed = false; });
+}
+if (chatBtn) chatBtn.addEventListener('click', warmUpBackend);
+
+async function getBotReply(userMessage) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60000); // allow for a cold start
+
+    try {
+        const res = await fetch(`${CHAT_API_URL}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage, history: chatHistory.slice(-MAX_HISTORY) }),
+            signal: controller.signal
+        });
+
+        let data = {};
+        try { data = await res.json(); } catch (_) { /* non-JSON error page */ }
+
+        if (!res.ok) {
+            throw new Error(data.error || `Request failed (${res.status})`);
+        }
+        if (!data.reply) throw new Error('Empty reply');
+        return data.reply;
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
+async function handleSendMessage() {
+    const text = chatInput.value.trim();
+    if (!text || isWaitingForReply) return;
+    isWaitingForReply = true;
+
+    // Hide suggestions after first message
+    if (chatSuggestions) {
+        chatSuggestions.style.display = 'none';
+    }
+
+    // Add user message
+    appendMessage('user', text);
+    chatInput.value = '';
+    chatSend.disabled = true;
+
+    // Show typing indicator
+    showTyping();
+
+    try {
+        const reply = await getBotReply(text);
+        hideTyping();
+        appendMessage('bot', reply);
+        chatHistory.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
+        chatHistory = chatHistory.slice(-MAX_HISTORY);
+    } catch (err) {
+        hideTyping();
+        const msg = err.name === 'AbortError'
+            ? "The assistant is taking too long to wake up. Please try again in a few seconds."
+            : (err.message && !/failed to fetch|networkerror|load failed/i.test(err.message)
+                ? err.message
+                : "Sorry, I couldn't reach the assistant. Please try again in a moment.");
+        appendMessage('bot', msg);
+        console.error(err);
+    } finally {
+        isWaitingForReply = false;
+    }
+
+    chatInput.focus();
+}

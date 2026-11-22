@@ -192,7 +192,6 @@ This portfolio website is:
 ## 📄 License
 
 This project is available under the [MIT License](LICENSE).
-*Feel free to fork, learn from, and adapt — just give credit where due.* 🙏
 
 <div align="center">
 

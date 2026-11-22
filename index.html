@@ -550,6 +550,11 @@
 
     <!-- Floating Buttons -->
 
+    <button class="floating-btn chat-btn" id="chat-btn" aria-label="Ask me anything">
+        <i class="fas fa-comment-dots"></i>
+        <span class="chat-btn-label">Ask me</span>
+    </button>
+
     <button class="floating-btn cv-btn" id="view-cv-btn" aria-label="View CV">
         <i class="fas fa-eye"></i>
     </button>
@@ -561,6 +566,47 @@
     <button class="back-to-top" id="back-to-top" aria-label="Back to top">
         <i class="fas fa-arrow-up"></i>
     </button>
+
+    <!-- Chat Widget -->
+    <div id="chat-widget" class="chat-widget" aria-hidden="true">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h3>Ask me anything</h3>
+                    <span class="chat-status"><span class="status-dot"></span> Online</span>
+                </div>
+            </div>
+            <button class="chat-close" id="chat-close" aria-label="Close chat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="chat-message bot">
+                <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                <div class="message-bubble">
+                    <div class="message-content markdown"><p>Hi! I'm Hanine's AI assistant. Ask me anything about her background, projects, skills, or Beez AI.</p></div>
+                    <span class="message-time">Just now</span>
+                </div>
+            </div>
+            <div class="chat-suggestions" id="chat-suggestions">
+                <button class="suggestion-chip" data-question="What is Beez AI?">What is Beez AI?</button>
+                <button class="suggestion-chip" data-question="Tell me about your skills">Your skills</button>
+                <button class="suggestion-chip" data-question="What are you currently working on?">Current work</button>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <div class="chat-input-wrapper">
+                <input type="text" id="chat-input" placeholder="Type your question..." autocomplete="off" maxlength="500" />
+                <button id="chat-send" aria-label="Send message" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <p class="chat-disclaimer">AI responses powered by Groq • May contain errors</p>
+        </div>
+    </div>
 
     <script src="script.js" defer></script>
     <script type="application/ld+json">
